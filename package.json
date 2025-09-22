@@ -7,7 +7,11 @@
     "android": "expo start -c --android",
     "ios": "expo start -c --ios",
     "web": "expo start -c --web",
-    "clean": "rm -rf .expo node_modules"
+    "clean": "rm -rf .expo node_modules",
+    "build:android:production": "eas build --platform android --profile production --clear-cache",
+    "build:android:preview": "eas build --platform android --profile preview --clear-cache",
+    "build:ios:production": "eas build --platform ios --profile production --clear-cache",
+    "build:all:production": "eas build --platform all --profile production --clear-cache"
   },
   "dependencies": {
     "@react-navigation/native": "^7.0.0",
@@ -39,6 +43,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
+    "@expo/cli": "latest",
     "@types/react": "~19.0.14",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
