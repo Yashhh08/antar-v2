@@ -1,89 +1,92 @@
-import { Button } from '@/components/ui/button';
-import { Icon } from '@/components/ui/icon';
-import { Text } from '@/components/ui/text';
-import { THEME } from '@/lib/theme';
-import { Link, Stack } from 'expo-router';
-import { MoonStarIcon, StarIcon, SunIcon } from 'lucide-react-native';
-import { useColorScheme } from 'nativewind';
-import * as React from 'react';
-import { Image, type ImageStyle, View } from 'react-native';
+import * as React from "react";
+import { View, Image } from "react-native";
+import { router } from "expo-router";
+import { Button } from "~/components/ui/button";
+import { Text } from "~/components/ui/text";
+import GradientCTA from "~/components/custom/GradientCTA";
+import OnboardingCarousel from "~/components/custom/OnboardingCarousel";
 
-const LOGO = {
-  light: require('@/assets/images/react-native-reusables-light.png'),
-  dark: require('@/assets/images/react-native-reusables-dark.png'),
-};
+// Background images
+const welcomeBg = require("~/assets/images/backgrounds/welcome-bg.jpg");
+const plansBg = require("~/assets/images/backgrounds/plans-bg.jpg");
+const nutritionBg = require("~/assets/images/backgrounds/nutrition-bg.jpg");
+const chatBg = require("~/assets/images/backgrounds/chat-bg.jpg");
+const logoImage = require("~/assets/images/profileLogo.png");
 
-const SCREEN_OPTIONS = {
-  light: {
-    title: 'React Native Reusables',
-    headerTransparent: true,
-    headerShadowVisible: true,
-    headerStyle: { backgroundColor: THEME.light.background },
-    headerRight: () => <ThemeToggle />,
-  },
-  dark: {
-    title: 'React Native Reusables',
-    headerTransparent: true,
-    headerShadowVisible: true,
-    headerStyle: { backgroundColor: THEME.dark.background },
-    headerRight: () => <ThemeToggle />,
-  },
-};
-
-const IMAGE_STYLE: ImageStyle = {
-  height: 76,
-  width: 76,
-};
-
-export default function Screen() {
-  const { colorScheme } = useColorScheme();
-
+export default function WelcomeScreen() {
+  const [index, setIndex] = React.useState(0);
   return (
-    <>
-      <Stack.Screen options={SCREEN_OPTIONS[colorScheme ?? 'light']} />
-      <View className="flex-1 items-center justify-center gap-8 p-4">
-        <Image source={LOGO[colorScheme ?? 'light']} style={IMAGE_STYLE} resizeMode="contain" />
-        <View className="gap-2 p-4">
-          <Text className="ios:text-foreground font-mono text-sm text-muted-foreground">
-            1. Edit <Text variant="code">app/index.tsx</Text> to get started.
-          </Text>
-          <Text className="ios:text-foreground font-mono text-sm text-muted-foreground">
-            2. Save to see your changes instantly.
-          </Text>
+    <View className="flex-1 bg-[#111214]">
+      <View className="flex-1">
+        {/* Onboarding Carousel */}
+        <OnboardingCarousel
+          slides={[
+            {
+              key: "welcome",
+              image: welcomeBg,
+              title: "Welcome To\nAntar Health App!",
+              subtitle: "A path to feeling healthier,\nwhole, and healed.",
+              logo: logoImage,
+            },
+            {
+              key: "plans",
+              image: plansBg,
+              title: "Personalized\nHealth Plans",
+              subtitle: "We curate plans that align\nwith your lifestyle.",
+              logo: logoImage,
+            },
+            {
+              key: "nutrition",
+              image: nutritionBg,
+              title: "Nutrition & Diet Guidance",
+              subtitle: "We curate the right diet for you.",
+              logo: logoImage,
+            },
+            {
+              key: "chat",
+              image: chatBg,
+              title: "Chat Support\nwith Antar AI",
+              subtitle: "Get support from our AI ChatBot.",
+              logo: logoImage,
+            },
+          ]}
+          compact
+          onIndexChange={setIndex}
+        />
+      </View>
+      {/* Persistent bottom overlay: progress + actions */}
+      <View className="px-6 pb-8">
+        <GradientCTA
+          title="Get Started"
+          onPress={() => router.push("/register")}
+        />
+        <View className="flex-row justify-center items-center mb-3 mt-1">
+          <Text className="text-white">Already have account?</Text>
+          <Button
+            variant="link"
+            onPress={() => router.push("/register")}
+            size={"sm"}
+          >
+            <Text className="text-antar-orange font-medium">Sign In</Text>
+          </Button>
         </View>
-        <View className="flex-row gap-2">
-          <Link href="https://reactnativereusables.com" asChild>
-            <Button>
-              <Text>Browse the Docs</Text>
-            </Button>
-          </Link>
-          <Link href="https://github.com/founded-labs/react-native-reusables" asChild>
-            <Button variant="ghost">
-              <Text>Star the Repo</Text>
-              <Icon as={StarIcon} />
-            </Button>
-          </Link>
+
+        <View className="flex-row justify-center items-center mb-4">
+          {[0, 1, 2, 3].map((i) => (
+            <View
+              key={i}
+              className="mx-1"
+              style={{
+                width: i === index ? 40 : 20,
+                height: 5,
+                backgroundColor:
+                  i === index ? "#ffffff" : "rgba(255, 255, 255, 0.2)",
+                borderRadius: 3,
+              }}
+            />
+          ))}
         </View>
       </View>
-    </>
-  );
-}
-
-const THEME_ICONS = {
-  light: SunIcon,
-  dark: MoonStarIcon,
-};
-
-function ThemeToggle() {
-  const { colorScheme, toggleColorScheme } = useColorScheme();
-
-  return (
-    <Button
-      onPressIn={toggleColorScheme}
-      size="icon"
-      variant="ghost"
-      className="rounded-full web:mx-4">
-      <Icon as={THEME_ICONS[colorScheme ?? 'light']} className="size-5" />
-    </Button>
+    </View>
   );
 }
